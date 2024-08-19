@@ -1,5 +1,5 @@
 {
-  "name": "erc20staking",
+  "name": "staking-ui",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "next": "14.2.1",
+    "prettier": "^3.3.3",
     "react": "^18",
     "react-dom": "^18",
     "thirdweb": "^5.6.0"
