@@ -158,8 +158,8 @@ export const StakeToken = () => {
                   borderRadius: '5px',
                 }}
               >
-                Available for reward:{' '}
-                {truncate(toEther(rewardTokenBalance!), 2)} {rewardTokenSymbol}
+                Claimed reward: {truncate(toEther(rewardTokenBalance!), 2)}{' '}
+                {rewardTokenSymbol}
               </p>
             )}
           </div>
