@@ -1,4 +1,5 @@
 import { defineChain } from "thirdweb";
 
-// Replace <chain_id> with the chain id of your chain
+// Replace 1287 with the chain id of your chain
+// Note: 1287 is the chainId for Moonbase Alpha
 export const chain = defineChain(1287);

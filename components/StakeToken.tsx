@@ -13,18 +13,38 @@ import {
   STAKING_CONTRACT,
 } from '../utils/contracts';
 import { prepareContractCall, toEther, toWei } from 'thirdweb';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { client } from '@/app/client';
 import { chain } from '@/app/chain';
+import { reducer, initialState } from './reducer';
 
 export const StakeToken = () => {
   const account = useActiveAccount();
 
-  const [stakeAmount, setStakeAmount] = useState(0);
-  const [withdrawAmount, setWithdrawAmount] = useState(0);
-  const [stakingState, setStakingState] = useState('init' || 'approved');
-  const [isStaking, setIsStaking] = useState(false);
-  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [
+    { stakeAmount, withdrawAmount, stakingState, isStaking, isWithdrawing },
+    dispatch,
+  ] = useReducer(reducer, initialState);
+
+  const handleStakeAmountChange = (amount: number) => {
+    dispatch({ type: 'SET_STAKE_AMOUNT', payload: amount });
+  };
+
+  const handleWithdrawAmountChange = (amount: number) => {
+    dispatch({ type: 'SET_WITHDRAW_AMOUNT', payload: amount });
+  };
+
+  const handleStakingStateChange = (state: 'init' | 'approved') => {
+    dispatch({ type: 'SET_STAKING_STATE', payload: state });
+  };
+
+  const handleIsStakingChange = (isStaking: boolean) => {
+    dispatch({ type: 'SET_IS_STAKING', payload: isStaking });
+  };
+
+  const handleIsWithdrawingChange = (isWithdrawing: boolean) => {
+    dispatch({ type: 'SET_IS_WITHDRAWING', payload: isWithdrawing });
+  };
 
   const {
     data: stakingTokenBalance,
@@ -50,8 +70,6 @@ export const StakeToken = () => {
     },
   });
 
-  console.log({ rewardTokenBalance, loadingRewardTokenBalance, account });
-
   const { data: stakeInfo, refetch: refetchStakeInfo } = useReadContract({
     contract: STAKING_CONTRACT,
     method: 'getStakeInfo',
@@ -60,6 +78,20 @@ export const StakeToken = () => {
       enabled: !!account,
     },
   });
+
+  const { data: stakingTokenSymbol, refetch: refetchStakingTokenSymbol } =
+    useReadContract({
+      contract: STAKE_TOKEN_CONTRACT,
+      method: 'function symbol() view returns (string)',
+      params: [],
+    });
+
+  const { data: rewardTokenSymbol, refetch: refetchRewardTokenSymbol } =
+    useReadContract({
+      contract: REWARD_TOKEN_CONTRACT,
+      method: 'function symbol() view returns (string)',
+      params: [],
+    });
 
   function truncate(value: string | number, decimalPlaces: number): number {
     const numericValue: number = Number(value);
@@ -80,6 +112,8 @@ export const StakeToken = () => {
 
   const refetchData = () => {
     refetchStakeInfo();
+    refetchStakingTokenSymbol();
+    refetchRewardTokenSymbol();
   };
 
   return (
@@ -97,7 +131,7 @@ export const StakeToken = () => {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'flex-start',
+              alignItems: 'center',
               margin: '20px',
             }}
           >
@@ -111,7 +145,8 @@ export const StakeToken = () => {
                   marginRight: '5px',
                 }}
               >
-                Staking Token: {truncate(toEther(stakingTokenBalance!), 2)}
+                Available to stake: {truncate(toEther(stakingTokenBalance!), 2)}{' '}
+                {stakingTokenSymbol}
               </p>
             )}
             {loadingRewardTokenBalance ? (
@@ -123,7 +158,8 @@ export const StakeToken = () => {
                   borderRadius: '5px',
                 }}
               >
-                Reward Token: {truncate(toEther(rewardTokenBalance!), 2)}
+                Available for reward:{' '}
+                {truncate(toEther(rewardTokenBalance!), 2)} {rewardTokenSymbol}
               </p>
             )}
           </div>
@@ -143,7 +179,7 @@ export const StakeToken = () => {
                     width: '45%',
                     cursor: 'pointer',
                   }}
-                  onClick={() => setIsStaking(true)}
+                  onClick={() => handleIsStakingChange(true)}
                 >
                   Stake
                 </button>
@@ -159,19 +195,28 @@ export const StakeToken = () => {
                     width: '45%',
                     cursor: 'pointer',
                   }}
-                  onClick={() => setIsWithdrawing(true)}
+                  onClick={() => handleIsWithdrawingChange(true)}
                 >
-                  Withraw
+                  Withdraw
                 </button>
               </div>
-              <div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '10px',
+                  marginTop: '20px',
+                }}
+              >
                 <p>
-                  Balance Staked:{' '}
-                  {truncate(toEther(stakeInfo[0]).toString(), 2)}
+                  Current Staked:{' '}
+                  {truncate(toEther(stakeInfo[0]).toString(), 2)}{' '}
+                  {stakingTokenSymbol}
                 </p>
                 <p>
-                  Reward Balance:{' '}
-                  {truncate(toEther(stakeInfo[1]).toString(), 2)}
+                  Current Rewards:{' '}
+                  {truncate(toEther(stakeInfo[1]).toString(), 2)}{' '}
+                  {rewardTokenSymbol}
                 </p>
                 <TransactionButton
                   transaction={() =>
@@ -227,9 +272,9 @@ export const StakeToken = () => {
                     fontSize: '0.5rem',
                   }}
                   onClick={() => {
-                    setIsStaking(false);
-                    setStakeAmount(0);
-                    setStakingState('init');
+                    handleIsStakingChange(false);
+                    handleStakeAmountChange(0);
+                    handleStakingStateChange('init');
                   }}
                 >
                   Close
@@ -242,7 +287,9 @@ export const StakeToken = () => {
                       type="number"
                       placeholder="0.0"
                       value={stakeAmount}
-                      onChange={e => setStakeAmount(parseFloat(e.target.value))}
+                      onChange={e =>
+                        handleStakeAmountChange(parseFloat(e.target.value))
+                      }
                       style={{
                         margin: '10px',
                         padding: '5px',
@@ -259,7 +306,9 @@ export const StakeToken = () => {
                           amount: stakeAmount,
                         })
                       }
-                      onTransactionConfirmed={() => setStakingState('approved')}
+                      onTransactionConfirmed={() =>
+                        handleStakingStateChange('approved')
+                      }
                       style={{
                         width: '100%',
                         margin: '10px 0',
@@ -280,11 +329,11 @@ export const StakeToken = () => {
                         })
                       }
                       onTransactionConfirmed={() => {
-                        setStakeAmount(0);
-                        setStakingState('init');
+                        handleStakeAmountChange(0);
+                        handleStakingStateChange('init');
                         refetchData();
                         refetchStakingTokenBalance();
-                        setIsStaking(false);
+                        handleIsStakingChange(false);
                       }}
                     >
                       Stake
@@ -330,7 +379,7 @@ export const StakeToken = () => {
                     fontSize: '0.5rem',
                   }}
                   onClick={() => {
-                    setIsWithdrawing(false);
+                    handleIsWithdrawingChange(false);
                   }}
                 >
                   Close
@@ -340,7 +389,9 @@ export const StakeToken = () => {
                   type="number"
                   placeholder="0.0"
                   value={withdrawAmount}
-                  onChange={e => setWithdrawAmount(parseFloat(e.target.value))}
+                  onChange={e =>
+                    handleWithdrawAmountChange(parseFloat(e.target.value))
+                  }
                   style={{
                     margin: '10px',
                     padding: '5px',
@@ -358,10 +409,10 @@ export const StakeToken = () => {
                     })
                   }
                   onTransactionConfirmed={() => {
-                    setWithdrawAmount(0);
+                    handleWithdrawAmountChange(0);
                     refetchData();
                     refetchStakingTokenBalance();
-                    setIsWithdrawing(false);
+                    handleIsWithdrawingChange(false);
                   }}
                   style={{
                     width: '100%',
