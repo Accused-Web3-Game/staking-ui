@@ -1,61 +1,18 @@
-# ERC-20 Staking App
+# Staking UI for Accused Web3 Game
 
-ERC-20 staking app where a user can stake a token and earn an ERC-20 in return.
+This is the UI for Accused Web3 Game, built from a template provided by `thirdweb`.
 
-## Getting Started
+## How it works
 
-To use the ERC-20 staking app, you'll need to clone this repository, install dependencies, set up environment variables, and deploy the application. Below are the steps to follow:
+It is built using `Next.js` and `thirdweb React SDK`. To run the project, it is recommended using `pnpm`.
 
-### Deploy Smart Contracts
+Before running the project, run `cp .env.example .env.local` then go to your thirdweb dashboard to grab your Client ID.
 
-You will need to deploy the following smart contracts to be used:
-[ERC-20 Token(Staking Token)](https://thirdweb.com/thirdweb.eth/TokenERC20)
-[ERC-20 Token(Reward Token)](https://thirdweb.com/thirdweb.eth/TokenERC20)
-[ERC-20 Staking Contract](https://thirdweb.com/thirdweb.eth/TokenStake)
+Install: `pnpm install`
+Run dev server: `pnpm dev`
+Build the project: `pnpm build`
+Run the build: `pnpm start`
 
-### Cloning the Repository
+## How to use
 
-To get started, clone the repository to your local machine:
-```
-git clone https://github.com/thirdweb-example/youtube-erc20-staking.git
-```
-
-
-### Installing Dependencies
-
-This application requires several dependencies to function, including thirdweb Connect SDK. Install them using npm or yarn:
-
-```
-npm install
-```
-or
-```
-yarn install
-```
-
-
-### Video Tutorial
-
-For a detailed setup and deployment guide, watch our video tutorial on YouTube:
-
-[How to Build an ERC-20 Staking App - Stake Tokens and Earn](https://youtu.be/MyxsfgEGG3w)
-
-### Setting Environment Variables
-
-Set the following variables in the `.env` file
-
-- `NEXT_PUBLIC_CLIENT_ID`: thirdweb API key.
-
-
-## Learn More
-
-To learn more about thirdweb and Next.js, take a look at the following resources:
-
-- [thirdweb docs Documentation](https://portal.thirdweb.com) - 
-- [thirdweb dashboard](https://thirdweb.com)
-
-You can check out [the thirdweb GitHub organization](https://github.com/thirdweb-dev) - your feedback and contributions are welcome!
-
-## Join our Discord!
-
-For any questions, suggestions, join our discord at [https://discord.gg/thirdweb](https://discord.gg/thirdweb).
+On localhost:3000 you can see the staking UI. You can stake tokens and see your rewards. You can unstake tokens and see your rewards. You can also claim your rewards. See demo for better understanding.
