@@ -1,6 +1,6 @@
 # Staking UI for Accused Web3 Game
 
-This is the UI for Accused Web3 Game, built from a template provided by `thirdweb`.
+This is the UI for Accused Web3 Game staking platform, built from a template provided by `thirdweb`.
 
 ## How it works
 
@@ -8,10 +8,10 @@ It is built using `Next.js` and `thirdweb React SDK`. To run the project, it is 
 
 Before running the project, run `cp .env.example .env.local` then go to your thirdweb dashboard to grab your Client ID.
 
-Install: `pnpm install`
-Run dev server: `pnpm dev`
-Build the project: `pnpm build`
-Run the build: `pnpm start`
+- Install: `pnpm install`
+- Run dev server: `pnpm dev`
+- Build the project: `pnpm build`
+- Run the build: `pnpm start`
 
 ## How to use
 
