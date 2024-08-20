@@ -117,315 +117,339 @@ export const StakeToken = () => {
   };
 
   return (
-    <div>
-      {account && (
-        <div
+    <>
+      {!!stakingTokenBalance && (
+        <h1
           style={{
-            backgroundColor: '#151515',
-            padding: '40px',
-            borderRadius: '10px',
+            color: '#DAA520',
+            backgroundColor: 'black',
+            padding: '10px',
           }}
         >
-          <ConnectButton client={client} chain={chain} />
+          Accused Game Staking Platform
+        </h1>
+      )}
+      <div
+        style={{
+          marginTop: '50px',
+        }}
+      >
+        {account && (
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              margin: '20px',
+              backgroundColor: '#151515',
+              padding: '40px',
+              borderRadius: '10px',
             }}
           >
-            {loadingStakeTokenBalance ? (
-              <p>Loading...</p>
-            ) : (
-              <p
-                style={{
-                  padding: '10px',
-                  borderRadius: '5px',
-                  marginRight: '5px',
-                }}
-              >
-                Available to stake: {truncate(toEther(stakingTokenBalance!), 2)}{' '}
-                {stakingTokenSymbol}
-              </p>
-            )}
-            {loadingRewardTokenBalance ? (
-              <p>Loading...</p>
-            ) : (
-              <p
-                style={{
-                  padding: '10px',
-                  borderRadius: '5px',
-                }}
-              >
-                Claimed reward: {truncate(toEther(rewardTokenBalance!), 2)}{' '}
-                {rewardTokenSymbol}
-              </p>
-            )}
-          </div>
-
-          {stakeInfo && (
-            <>
-              <div>
-                <button
+            <ConnectButton client={client} chain={chain} />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                margin: '20px',
+              }}
+            >
+              {loadingStakeTokenBalance ? (
+                <p>Loading...</p>
+              ) : (
+                <p
                   style={{
-                    margin: '5px',
                     padding: '10px',
-                    backgroundColor: '#efefef',
-                    border: 'none',
-                    borderRadius: '6px',
-                    color: '#333',
-                    fontSize: '1rem',
-                    width: '45%',
-                    cursor: 'pointer',
+                    borderRadius: '5px',
+                    marginRight: '5px',
                   }}
-                  onClick={() => handleIsStakingChange(true)}
                 >
-                  Stake
-                </button>
-                <button
-                  style={{
-                    margin: '5px',
-                    padding: '10px',
-                    backgroundColor: '#efefef',
-                    border: 'none',
-                    borderRadius: '6px',
-                    color: '#333',
-                    fontSize: '1rem',
-                    width: '45%',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => handleIsWithdrawingChange(true)}
-                >
-                  Withdraw
-                </button>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '10px',
-                  marginTop: '20px',
-                }}
-              >
-                <p>
-                  Current Staked:{' '}
-                  {truncate(toEther(stakeInfo[0]).toString(), 2)}{' '}
+                  Available to stake:{' '}
+                  {truncate(toEther(stakingTokenBalance!), 2)}{' '}
                   {stakingTokenSymbol}
                 </p>
-                <p>
-                  Current Rewards:{' '}
-                  {truncate(toEther(stakeInfo[1]).toString(), 2)}{' '}
+              )}
+              {loadingRewardTokenBalance ? (
+                <p>Loading...</p>
+              ) : (
+                <p
+                  style={{
+                    padding: '10px',
+                    borderRadius: '5px',
+                  }}
+                >
+                  Claimed reward: {truncate(toEther(rewardTokenBalance!), 2)}{' '}
                   {rewardTokenSymbol}
                 </p>
-                <TransactionButton
-                  transaction={() =>
-                    prepareContractCall({
-                      contract: STAKING_CONTRACT,
-                      method: 'claimRewards',
-                    })
-                  }
-                  onTransactionConfirmed={() => {
-                    refetchData();
-                    refetchStakingTokenBalance();
-                    refetchRewardTokenBalance();
+              )}
+            </div>
+
+            {stakeInfo && (
+              <>
+                <div>
+                  <button
+                    style={{
+                      margin: '5px',
+                      padding: '10px',
+                      fontSize: '1rem',
+                      width: '45%',
+                      cursor: 'pointer',
+                      color: 'white', // Primary color
+                      border: '2px solid #DAA520',
+                      backgroundColor: '#DAA520',
+                      borderRadius: '5px',
+                      fontWeight: 'bold',
+                    }}
+                    onClick={() => handleIsStakingChange(true)}
+                  >
+                    Stake
+                  </button>
+                  <button
+                    style={{
+                      margin: '5px',
+                      padding: '10px',
+                      borderRadius: '6px',
+                      fontSize: '1rem',
+                      width: '45%',
+                      color: 'white', // Secondary color
+                      border: '2px solid white',
+                      backgroundColor: 'transparent',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                    }}
+                    onClick={() => handleIsWithdrawingChange(true)}
+                  >
+                    Withdraw
+                  </button>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                    marginTop: '20px',
                   }}
                 >
-                  Claim Rewards
-                </TransactionButton>
-              </div>
-            </>
-          )}
-          {isStaking && (
-            <div
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+                  <p>
+                    Current Staked:{' '}
+                    {truncate(toEther(stakeInfo[0]).toString(), 2)}{' '}
+                    {stakingTokenSymbol}
+                  </p>
+                  <p>
+                    Current Rewards:{' '}
+                    {truncate(toEther(stakeInfo[1]).toString(), 2)}{' '}
+                    {rewardTokenSymbol}
+                  </p>
+                  <TransactionButton
+                    style={{
+                      backgroundColor: '#87CEEB',
+                      color: 'white',
+                    }}
+                    transaction={() =>
+                      prepareContractCall({
+                        contract: STAKING_CONTRACT,
+                        method: 'claimRewards',
+                      })
+                    }
+                    onTransactionConfirmed={() => {
+                      refetchData();
+                      refetchStakingTokenBalance();
+                      refetchRewardTokenBalance();
+                    }}
+                  >
+                    Claim Rewards
+                  </TransactionButton>
+                </div>
+              </>
+            )}
+            {isStaking && (
               <div
                 style={{
-                  position: 'relative',
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   display: 'flex',
-                  flexDirection: 'column',
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: '#151515',
-                  padding: '40px',
-                  borderRadius: '10px',
-                  minWidth: '300px',
                 }}
               >
-                <button
+                <div
                   style={{
-                    position: 'absolute',
-                    top: 5,
-                    right: 5,
-                    padding: '5px',
-                    margin: '5px',
-                    fontSize: '0.5rem',
-                  }}
-                  onClick={() => {
-                    handleIsStakingChange(false);
-                    handleStakeAmountChange(0);
-                    handleStakingStateChange('init');
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    backgroundColor: '#151515',
+                    padding: '40px',
+                    borderRadius: '10px',
+                    minWidth: '300px',
                   }}
                 >
-                  Close
-                </button>
-                <h3>Stake</h3>
-                <p>Balance: {toEther(stakingTokenBalance!)}</p>
-                {stakingState === 'init' ? (
-                  <>
-                    <input
-                      type="number"
-                      placeholder="0.0"
-                      value={stakeAmount}
-                      onChange={e =>
-                        handleStakeAmountChange(parseFloat(e.target.value))
-                      }
-                      style={{
-                        margin: '10px',
-                        padding: '5px',
-                        borderRadius: '5px',
-                        border: '1px solid #333',
-                        width: '100%',
-                      }}
-                    />
-                    <TransactionButton
-                      transaction={() =>
-                        approve({
-                          contract: STAKE_TOKEN_CONTRACT,
-                          spender: STAKING_CONTRACT.address,
-                          amount: stakeAmount,
-                        })
-                      }
-                      onTransactionConfirmed={() =>
-                        handleStakingStateChange('approved')
-                      }
-                      style={{
-                        width: '100%',
-                        margin: '10px 0',
-                      }}
-                    >
-                      Set Approval
-                    </TransactionButton>
-                  </>
-                ) : (
-                  <>
-                    <h3 style={{ margin: '10px 0' }}>{stakeAmount}</h3>
-                    <TransactionButton
-                      transaction={() =>
-                        prepareContractCall({
-                          contract: STAKING_CONTRACT,
-                          method: 'stake',
-                          params: [toWei(stakeAmount.toString())],
-                        })
-                      }
-                      onTransactionConfirmed={() => {
-                        handleStakeAmountChange(0);
-                        handleStakingStateChange('init');
-                        refetchData();
-                        refetchStakingTokenBalance();
-                        handleIsStakingChange(false);
-                      }}
-                    >
-                      Stake
-                    </TransactionButton>
-                  </>
-                )}
+                  <button
+                    style={{
+                      position: 'absolute',
+                      top: 5,
+                      right: 5,
+                      padding: '5px',
+                      margin: '5px',
+                      fontSize: '0.5rem',
+                    }}
+                    onClick={() => {
+                      handleIsStakingChange(false);
+                      handleStakeAmountChange(0);
+                      handleStakingStateChange('init');
+                    }}
+                  >
+                    Close
+                  </button>
+                  <h3>Stake</h3>
+                  <p>Balance: {toEther(stakingTokenBalance!)}</p>
+                  {stakingState === 'init' ? (
+                    <>
+                      <input
+                        type="number"
+                        placeholder="0.0"
+                        value={stakeAmount}
+                        onChange={e =>
+                          handleStakeAmountChange(parseFloat(e.target.value))
+                        }
+                        style={{
+                          margin: '10px',
+                          padding: '5px',
+                          borderRadius: '5px',
+                          border: '1px solid #333',
+                          width: '100%',
+                        }}
+                      />
+                      <TransactionButton
+                        transaction={() =>
+                          approve({
+                            contract: STAKE_TOKEN_CONTRACT,
+                            spender: STAKING_CONTRACT.address,
+                            amount: stakeAmount,
+                          })
+                        }
+                        onTransactionConfirmed={() =>
+                          handleStakingStateChange('approved')
+                        }
+                        style={{
+                          width: '100%',
+                          margin: '10px 0',
+                        }}
+                      >
+                        Set Approval
+                      </TransactionButton>
+                    </>
+                  ) : (
+                    <>
+                      <h3 style={{ margin: '10px 0' }}>{stakeAmount}</h3>
+                      <TransactionButton
+                        transaction={() =>
+                          prepareContractCall({
+                            contract: STAKING_CONTRACT,
+                            method: 'stake',
+                            params: [toWei(stakeAmount.toString())],
+                          })
+                        }
+                        onTransactionConfirmed={() => {
+                          handleStakeAmountChange(0);
+                          handleStakingStateChange('init');
+                          refetchData();
+                          refetchStakingTokenBalance();
+                          handleIsStakingChange(false);
+                        }}
+                      >
+                        Stake
+                      </TransactionButton>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-          {isWithdrawing && (
-            <div
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+            )}
+            {isWithdrawing && (
               <div
                 style={{
-                  position: 'relative',
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   display: 'flex',
-                  flexDirection: 'column',
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: '#151515',
-                  padding: '40px',
-                  borderRadius: '10px',
-                  minWidth: '300px',
                 }}
               >
-                <button
+                <div
                   style={{
-                    position: 'absolute',
-                    top: 5,
-                    right: 5,
-                    padding: '5px',
-                    margin: '5px',
-                    fontSize: '0.5rem',
-                  }}
-                  onClick={() => {
-                    handleIsWithdrawingChange(false);
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    backgroundColor: '#151515',
+                    padding: '40px',
+                    borderRadius: '10px',
+                    minWidth: '300px',
                   }}
                 >
-                  Close
-                </button>
-                <h3>Withraw</h3>
-                <input
-                  type="number"
-                  placeholder="0.0"
-                  value={withdrawAmount}
-                  onChange={e =>
-                    handleWithdrawAmountChange(parseFloat(e.target.value))
-                  }
-                  style={{
-                    margin: '10px',
-                    padding: '5px',
-                    borderRadius: '5px',
-                    border: '1px solid #333',
-                    width: '100%',
-                  }}
-                />
-                <TransactionButton
-                  transaction={() =>
-                    prepareContractCall({
-                      contract: STAKING_CONTRACT,
-                      method: 'withdraw',
-                      params: [toWei(withdrawAmount.toString())],
-                    })
-                  }
-                  onTransactionConfirmed={() => {
-                    handleWithdrawAmountChange(0);
-                    refetchData();
-                    refetchStakingTokenBalance();
-                    handleIsWithdrawingChange(false);
-                  }}
-                  style={{
-                    width: '100%',
-                    margin: '10px 0',
-                  }}
-                >
-                  Withdraw
-                </TransactionButton>
+                  <button
+                    style={{
+                      position: 'absolute',
+                      top: 5,
+                      right: 5,
+                      padding: '5px',
+                      margin: '5px',
+                      fontSize: '0.5rem',
+                    }}
+                    onClick={() => {
+                      handleIsWithdrawingChange(false);
+                    }}
+                  >
+                    Close
+                  </button>
+                  <h3>Withraw</h3>
+                  <input
+                    type="number"
+                    placeholder="0.0"
+                    value={withdrawAmount}
+                    onChange={e =>
+                      handleWithdrawAmountChange(parseFloat(e.target.value))
+                    }
+                    style={{
+                      margin: '10px',
+                      padding: '5px',
+                      borderRadius: '5px',
+                      border: '1px solid #333',
+                      width: '100%',
+                    }}
+                  />
+                  <TransactionButton
+                    transaction={() =>
+                      prepareContractCall({
+                        contract: STAKING_CONTRACT,
+                        method: 'withdraw',
+                        params: [toWei(withdrawAmount.toString())],
+                      })
+                    }
+                    onTransactionConfirmed={() => {
+                      handleWithdrawAmountChange(0);
+                      refetchData();
+                      refetchStakingTokenBalance();
+                      handleIsWithdrawingChange(false);
+                    }}
+                    style={{
+                      width: '100%',
+                      margin: '10px 0',
+                    }}
+                  >
+                    Withdraw
+                  </TransactionButton>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+            )}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
